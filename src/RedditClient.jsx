@@ -7,10 +7,14 @@ export default function RedditClient() {
   const [postData, setPostData] = useState(null)
 
   useEffect(() => {
-    fetchData(getRedditUrl()).then((json) => {
-      console.log('Fetched json:', json)
-      setPostData(json)
-    })
+    fetchData(getRedditUrl())
+      .then((json) => {
+        console.log('Fetched json:', json)
+        setPostData(json)
+      })
+      .catch((error) => {
+        console.error(error)
+      })
   }, [])
   return (
     <div>

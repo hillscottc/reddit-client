@@ -4,11 +4,11 @@ export function getRedditUrl(sub) {
   return url + '/.json'
 }
 
-export function fetchData(url) {
-  return fetch(url)
-    .then((response) => response.json())
-    .then((json) => json)
-    .catch((e) => {
-      console.error('Failed fetch:', e)
-    })
+export async function fetchData(url) {
+  const response = await fetch(url)
+  if (!response.ok) {
+    const message = `An error has occurred: ${response.status}`
+    throw new Error(message)
+  }
+  return await response.json()
 }

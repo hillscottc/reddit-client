@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { getRedditUrl, fetchData } from './util'
 import PostDataWrapper from './PostDataWrapper.jsx'
+import AddFeed from './AddFeed.jsx'
 
 export default function RedditClient() {
   const [postData, setPostData] = useState(null)
@@ -14,6 +15,7 @@ export default function RedditClient() {
   return (
     <div>
       <h1>Reddit Client</h1>
+      <AddFeed />
       <PostDataWrapper postData={postData} />
     </div>
   )

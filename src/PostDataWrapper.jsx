@@ -1,18 +1,23 @@
 import PropTypes from 'prop-types'
 
-function PostImagePreview({ preview }) {
-  console.log('PREVIEW:', preview)
-  const src = preview && preview.images[0] ? preview.images[0].source.url : ''
+export default function PostDataWrapper({ postData }) {
+  // console.log('postData:', postData)
   return (
-    <>
-      <img alt='postImg' src={src} />
-      <span>{src}</span>
-    </>
+    <div>
+      <h2>POSTS</h2>
+      {postData &&
+        postData.data.children.map((post, ndx) => (
+          <RedditPost key={ndx} post={post} />
+        ))}
+    </div>
   )
 }
-PostImagePreview.propTypes = {
-  preview: PropTypes.shape({
-    images: PropTypes.array.isRequired,
+PostDataWrapper.propTypes = {
+  postData: PropTypes.shape({
+    data: PropTypes.shape({
+      modhash: PropTypes.string.isRequired,
+      children: PropTypes.array.isRequired,
+    }).isRequired,
   }),
 }
 
@@ -21,9 +26,7 @@ function RedditPost({ post }) {
   const { permalink, preview, title, url } = post.data
   return (
     <div className='p-6 w-5/6 mx-auto bg-white rounded-xl shadow-md items-center space-x-4 m-9'>
-      {/*<div>*/}
       {/*  <PostImagePreview preview={preview} />*/}
-      {/*</div>*/}
       <div>
         <a href={url}> {title}</a>
       </div>
@@ -44,23 +47,18 @@ RedditPost.propTypes = {
   }).isRequired,
 }
 
-export default function PostDataWrapper({ postData }) {
-  // console.log('postData:', postData)
+function PostImagePreview({ preview }) {
+  console.log('PREVIEW:', preview)
+  const src = preview && preview.images[0] ? preview.images[0].source.url : ''
   return (
     <div>
-      <h2>POSTS</h2>
-      {postData &&
-        postData.data.children.map((post, ndx) => (
-          <RedditPost key={ndx} post={post} />
-        ))}
+      <img alt='postImg' src={src} />
+      <span>{src}</span>
     </div>
   )
 }
-PostDataWrapper.propTypes = {
-  postData: PropTypes.shape({
-    data: PropTypes.shape({
-      modhash: PropTypes.string.isRequired,
-      children: PropTypes.array.isRequired,
-    }).isRequired,
+PostImagePreview.propTypes = {
+  preview: PropTypes.shape({
+    images: PropTypes.array.isRequired,
   }),
 }

@@ -1,27 +1,47 @@
 import { useEffect, useState } from 'react'
 import { getRedditUrl, fetchData } from './util'
-import RedditPostWrapper from './RedditPostWrapper.jsx'
+import RedditPage from './RedditPage.jsx'
 import AddFeed from './AddFeed.jsx'
 
 export default function RedditClient() {
-  const [postData, setPostData] = useState(null)
   const [favlist, setFavlist] = useState([])
   const [feedToAdd, setFeedToAdd] = useState('')
+  const [pages, setPages] = useState([])
 
   useEffect(() => {
     setFavlistFromLocal()
   }, [])
 
   useEffect(() => {
-    fetchData(getRedditUrl())
-      .then((json) => {
-        console.log('Fetched json:', json)
-        setPostData(json)
+    if (favlist.length < 1) return
+    console.log('FETCH DATA FOR SUBREDDITS: ', favlist)
+    if (favlist && favlist.length > 0) {
+      updatePagesForSubs(favlist).then((pageArr) => {
+        console.log('Got pages:', pageArr)
+        setPages(pageArr)
       })
+    }
+  }, [favlist])
+
+  const updatePagesForSubs = async (favlist) => {
+    const pageArr = []
+    let pageObj
+    for (const sub of favlist) {
+      pageObj = await fetchSubreddit(sub)
+      if (pageObj) pageArr.push({ url: sub, pageObj })
+      else console.log('No data for: ', sub)
+    }
+    return pageArr
+  }
+
+  const fetchSubreddit = (sub) => {
+    const url = getRedditUrl(sub)
+    return fetchData(url)
+      .then((json) => json)
       .catch((error) => {
-        console.error(error)
+        console.error(`Failed ${url} error:`, error)
       })
-  }, [])
+  }
 
   const setFavlistFromLocal = () => {
     const localList = localStorage.getItem('redditFavList')
@@ -47,9 +67,7 @@ export default function RedditClient() {
   }
 
   const handleSubscribe = async () => {
-    console.log('subscribe click:', feedToAdd)
     const index = favlist.indexOf(feedToAdd)
-    console.log('index', index)
 
     // if its already there, remove it, otherwise add it
     if (index > -1) await favlistUpdate(feedToAdd, false)
@@ -61,7 +79,10 @@ export default function RedditClient() {
       <h1>Reddit Client</h1>
       <AddFeed {...{ feedToAdd, handleSubscribe, setFeedToAdd }} />
       <div>favs: {JSON.stringify(favlist)}</div>
-      <RedditPostWrapper postData={postData} />
+
+      {pages.map((page, ndx) => (
+        <RedditPage key={ndx} page={page} />
+      ))}
     </div>
   )
 }

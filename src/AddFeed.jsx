@@ -31,6 +31,6 @@ export default function AddFeed({ feedToAdd, handleSubscribe, setFeedToAdd }) {
 }
 AddFeed.propTypes = {
   feedToAdd: PropTypes.string.isRequired,
-  handleSubscribe: PropTypes.string.isRequired,
+  handleSubscribe: PropTypes.func.isRequired,
   setFeedToAdd: PropTypes.func.isRequired,
 }

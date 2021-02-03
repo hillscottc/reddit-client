@@ -3,9 +3,19 @@ import PropTypes from 'prop-types'
 export function RedditPost({ post }) {
   const redditUrl = (permalink) => `https://www.reddit.com${permalink}`
   const { permalink, preview, title, url } = post.data
+
+  const imgSrc =
+    preview && preview.images[0] ? preview.images[0].source.url : ''
+
+  const SHOW_IMAGE = false
   return (
     <div className='p-6 w-5/6 mx-auto bg-white rounded-xl shadow-md items-center space-x-4 m-9'>
-      {/*  <PostImagePreview preview={preview} />*/}
+      {SHOW_IMAGE && (
+        <div>
+          <img alt='Post Image' src={imgSrc} />
+          <span>{imgSrc}</span>
+        </div>
+      )}
       <div>
         <a href={url}> {title}</a>
       </div>
@@ -21,23 +31,9 @@ RedditPost.propTypes = {
       permalink: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
-      preview: PropTypes.object,
+      preview: PropTypes.shape({
+        images: PropTypes.array.isRequired,
+      }),
     }).isRequired,
   }).isRequired,
-}
-
-export function PostImagePreview({ preview }) {
-  console.log('PREVIEW:', preview)
-  const src = preview && preview.images[0] ? preview.images[0].source.url : ''
-  return (
-    <div>
-      <img alt='postImg' src={src} />
-      <span>{src}</span>
-    </div>
-  )
-}
-PostImagePreview.propTypes = {
-  preview: PropTypes.shape({
-    images: PropTypes.array.isRequired,
-  }),
 }

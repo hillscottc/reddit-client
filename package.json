@@ -31,7 +31,8 @@
     "lint-fix": "eslint src --ext .js,.jsx --fix && yarn prettify",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
-    "test": "./node_modules/.bin/jest"
+    "test": "./node_modules/.bin/jest",
+    "heroku-prebuild": "npm install --dev"
   },
   "husky": {
     "hooks": {

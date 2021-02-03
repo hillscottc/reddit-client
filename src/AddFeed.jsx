@@ -7,7 +7,7 @@ export default function AddFeed({ feedToAdd, handleSubscribe, setFeedToAdd }) {
   }, [])
 
   return (
-    <div className='flex rounded-xl shadow-md items-center text-lg'>
+    <div className='flex rounded-xl shadow-md items-center text-lg mb-4'>
       <div className='bg-gray-300 p-5 rounded-xl font-bold'>r/</div>
       <div>
         <input
@@ -23,7 +23,7 @@ export default function AddFeed({ feedToAdd, handleSubscribe, setFeedToAdd }) {
           className='pt-1 pt-1 pl-2 pr-2 bg-blue-400 text-white'
           onClick={handleSubscribe}
         >
-          SUBSCRIBE
+          (UN)SUBSCRIBE
         </button>
       </div>
     </div>

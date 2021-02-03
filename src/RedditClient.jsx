@@ -67,10 +67,9 @@ export default function RedditClient() {
     }
   }
 
+  // if its already there, remove it, otherwise add it
   const handleSubscribe = async () => {
     const index = favlist.indexOf(feedToAdd)
-
-    // if its already there, remove it, otherwise add it
     if (index > -1) await favlistUpdate(feedToAdd, false)
     else await favlistUpdate(feedToAdd)
   }
@@ -80,21 +79,23 @@ export default function RedditClient() {
   }, [])
 
   return (
-    <div className='flex flex-col justify-center content-center items-center '>
-      <h1>Reddit Client</h1>
+    <div className='flex flex-col justify-center content-center items-center mt-4'>
       <AddFeed {...{ feedToAdd, handleSubscribe, setFeedToAdd }} />
-      <div className='flex rounded-xl shadow-md m-2 p-2'>
+
+      <section className='flex rounded-xl shadow-md m-2 p-2'>
+        Subscribed subreddits: {JSON.stringify(favlist)}
+      </section>
+
+      <section className='flex rounded-xl shadow-md m-2 p-2'>
         Posts to show per subreddit:&nbsp;
-        {/*<input type='text' value={numToShow} onChange={handleNumToShow} />*/}
-        <select onChange={handleNumToShow}>
+        <select className='bg-gray-300' onChange={handleNumToShow}>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
             <option key={n} value={n}>
               {n}
             </option>
           ))}
         </select>
-      </div>
-      <div>favs: {JSON.stringify(favlist)}</div>
+      </section>
 
       {pages.map((page, ndx) => (
         <RedditPage key={ndx} page={page} numPostsToShow={numToShow} />

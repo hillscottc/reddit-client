@@ -57,7 +57,7 @@ export default function RedditClient() {
   }
 
   return (
-    <div>
+    <div className='flex flex-col justify-center content-center items-center '>
       <h1>Reddit Client</h1>
       <AddFeed />
       <RedditPostWrapper postData={postData} />

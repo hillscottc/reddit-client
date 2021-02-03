@@ -14,14 +14,18 @@ export default function RedditClient() {
   }, [])
 
   useEffect(() => {
-    if (favlist.length < 1) return
+    // if (favlist.length < 1) return
     console.log('FETCH DATA FOR SUBREDDITS: ', favlist)
-    if (favlist && favlist.length > 0) {
-      updatePagesForSubs(favlist).then((pageArr) => {
-        console.log('Got pages:', pageArr)
-        setPages(pageArr)
-      })
-    }
+    // if (favlist && favlist.length > 0) {
+    //   updatePagesForSubs(favlist).then((pageArr) => {
+    //     console.log('Got pages:', pageArr)
+    //     setPages(pageArr)
+    //   })
+    // }
+    updatePagesForSubs(favlist).then((pageArr) => {
+      console.log('Got pages:', pageArr)
+      setPages(pageArr)
+    })
   }, [favlist])
 
   const updatePagesForSubs = async (favlist) => {
@@ -56,7 +60,7 @@ export default function RedditClient() {
     }
   }
 
-  const favlistUpdate = async (fav, isAdd = true) => {
+  const favlistUpdate = (fav, isAdd = true) => {
     if (fav === '') return
     const newWatchlist = isAdd
       ? [...favlist, fav]
@@ -68,22 +72,46 @@ export default function RedditClient() {
   }
 
   // if its already there, remove it, otherwise add it
-  const handleSubscribe = async () => {
+  const handleSubscribe = () => {
     const index = favlist.indexOf(feedToAdd)
-    if (index > -1) await favlistUpdate(feedToAdd, false)
-    else await favlistUpdate(feedToAdd)
+    if (index > -1) favlistUpdate(feedToAdd, false)
+    else favlistUpdate(feedToAdd)
   }
 
   const handleNumToShow = useCallback((e) => {
     setNumToShow(e.target.value)
   }, [])
 
+  const handleRemoveFav = (e) => {
+    const fav = e.target.value
+    console.log('REMOVE:', fav)
+    const newWatchlist = favlist.filter((x) => x !== fav)
+    setFavlist([])
+    setFavlist(newWatchlist)
+    localStorage.setItem('redditFavList', JSON.stringify(newWatchlist))
+  }
+
   return (
     <div className='flex flex-col justify-center content-center items-center mt-4'>
       <AddFeed {...{ feedToAdd, handleSubscribe, setFeedToAdd }} />
 
       <section className='flex rounded-xl shadow-md m-2 p-2'>
-        Subscribed subreddits: {JSON.stringify(favlist)}
+        Subscribed subreddits:&nbsp;
+        {favlist.map((fav) => (
+          <div key={fav}>
+            <div className='bg-green-400 pl-1 pr-1 mr-2'>
+              <button
+                className='text-red-600 pr-1'
+                // eslint-disable-next-line
+                onClick={handleRemoveFav}
+                value={fav}
+              >
+                X
+              </button>
+              {fav}
+            </div>
+          </div>
+        ))}
       </section>
 
       <section className='flex rounded-xl shadow-md m-2 p-2'>

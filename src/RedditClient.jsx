@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { getRedditUrl, fetchData } from './util'
 import RedditPage from './RedditPage.jsx'
 import AddFeed from './AddFeed.jsx'
@@ -7,6 +7,7 @@ export default function RedditClient() {
   const [favlist, setFavlist] = useState([])
   const [feedToAdd, setFeedToAdd] = useState('')
   const [pages, setPages] = useState([])
+  const [numToShow, setNumToShow] = useState(1)
 
   useEffect(() => {
     setFavlistFromLocal()
@@ -74,14 +75,29 @@ export default function RedditClient() {
     else await favlistUpdate(feedToAdd)
   }
 
+  const handleNumToShow = useCallback((e) => {
+    setNumToShow(e.target.value)
+  }, [])
+
   return (
     <div className='flex flex-col justify-center content-center items-center '>
       <h1>Reddit Client</h1>
       <AddFeed {...{ feedToAdd, handleSubscribe, setFeedToAdd }} />
+      <div className='flex rounded-xl shadow-md m-2 p-2'>
+        Posts to show per subreddit:&nbsp;
+        {/*<input type='text' value={numToShow} onChange={handleNumToShow} />*/}
+        <select onChange={handleNumToShow}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+            <option key={n} value={n}>
+              {n}
+            </option>
+          ))}
+        </select>
+      </div>
       <div>favs: {JSON.stringify(favlist)}</div>
 
       {pages.map((page, ndx) => (
-        <RedditPage key={ndx} page={page} />
+        <RedditPage key={ndx} page={page} numPostsToShow={numToShow} />
       ))}
     </div>
   )

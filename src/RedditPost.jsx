@@ -1,15 +1,20 @@
 import PropTypes from 'prop-types'
-import LikeIcon from './assets/like-svgrepo-com.svg'
+import LikeIcon from './assets/like-icon.svg'
+import moment from 'moment'
 
 export function RedditPost({ post, sub }) {
   const redditUrl = (permalink) => `https://www.reddit.com${permalink}`
   const { permalink, preview, title, ups } = post.data
+  const createDate = moment(post.data.created * 1000).format(
+    'MMM DD YYYY h:mm:ss A'
+  )
 
-  console.log('DATA:', post.data)
+  // console.log('DATA:', post.data)
 
   const imgSrc =
     preview && preview.images[0] ? preview.images[0].source.url : ''
 
+  // TURNING IMAGES OFF FOR NOW
   const SHOW_IMAGE = false
   return (
     <div className='p-6 w-5/6 bg-white rounded-xl shadow-md items-center space-x-4 m-9'>
@@ -37,7 +42,7 @@ export function RedditPost({ post, sub }) {
           height='25px'
         />
         <div className='pl-3 pr-3'>|</div>
-        <div>the date</div>
+        <div>{createDate}</div>
       </div>
     </div>
   )
@@ -45,6 +50,7 @@ export function RedditPost({ post, sub }) {
 RedditPost.propTypes = {
   post: PropTypes.shape({
     data: PropTypes.shape({
+      created: PropTypes.number,
       permalink: PropTypes.string.isRequired,
       url: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,

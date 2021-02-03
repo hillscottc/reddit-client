@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 import { RedditPost } from './RedditPost.jsx'
 
 export default function RedditPage({ page, numPostsToShow = 1 }) {
-  const { url, pageObj } = page
+  const { sub, pageObj } = page
   const posts = pageObj.data.children
 
   let postsToShow
@@ -12,17 +12,16 @@ export default function RedditPage({ page, numPostsToShow = 1 }) {
     postsToShow = posts.slice()
   }
   return (
-    <div>
-      <h2>PAGE URL {url}</h2>
+    <>
       {postsToShow.map((post, ndx) => (
-        <RedditPost key={ndx} post={post} />
+        <RedditPost key={ndx} {...{ post, sub }} />
       ))}
-    </div>
+    </>
   )
 }
 RedditPage.propTypes = {
   page: PropTypes.shape({
-    url: PropTypes.string.isRequired,
+    sub: PropTypes.string.isRequired,
     pageObj: PropTypes.shape({
       data: PropTypes.shape({
         children: PropTypes.array.isRequired,

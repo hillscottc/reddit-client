@@ -28,7 +28,7 @@ export default function RedditClient() {
     let pageObj
     for (const sub of favlist) {
       pageObj = await fetchSubreddit(sub)
-      if (pageObj) pageArr.push({ url: sub, pageObj })
+      if (pageObj) pageArr.push({ sub, pageObj })
       else console.log('No data for: ', sub)
     }
     return pageArr

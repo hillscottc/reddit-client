@@ -5,7 +5,8 @@ import AddFeed from './AddFeed.jsx'
 
 export default function RedditClient() {
   const [postData, setPostData] = useState(null)
-  const [favlist, setFavlist] = useState([0])
+  const [favlist, setFavlist] = useState([])
+  const [feedToAdd, setFeedToAdd] = useState('')
 
   useEffect(() => {
     setFavlistFromLocal()
@@ -26,10 +27,7 @@ export default function RedditClient() {
     const localList = localStorage.getItem('redditFavList')
     try {
       if (localList) {
-        console.log(
-          'Loading redditFavList list from local, setting to: ',
-          localList
-        )
+        console.log('Loading localstorage redditFavList, set to: ', localList)
         setFavlist(JSON.parse(localList))
       }
     } catch (e) {
@@ -37,29 +35,32 @@ export default function RedditClient() {
     }
   }
 
-  const favlistUpdate = async (id, isAdd = true) => {
+  const favlistUpdate = async (fav, isAdd = true) => {
+    if (fav === '') return
     const newWatchlist = isAdd
-      ? [...favlist, id]
-      : favlist.filter((x) => x !== id)
+      ? [...favlist, fav]
+      : favlist.filter((x) => x !== fav)
     if (newWatchlist) {
       setFavlist(newWatchlist)
       localStorage.setItem('redditFavList', JSON.stringify(newWatchlist))
     }
   }
 
-  const doFavlistClick = async (id) => {
-    const index = favlist.indexOf(id)
+  const handleSubscribe = async () => {
+    console.log('subscribe click:', feedToAdd)
+    const index = favlist.indexOf(feedToAdd)
     console.log('index', index)
 
     // if its already there, remove it, otherwise add it
-    if (index > -1) await favlistUpdate(id, false)
-    else await favlistUpdate(id)
+    if (index > -1) await favlistUpdate(feedToAdd, false)
+    else await favlistUpdate(feedToAdd)
   }
 
   return (
     <div className='flex flex-col justify-center content-center items-center '>
       <h1>Reddit Client</h1>
-      <AddFeed />
+      <AddFeed {...{ feedToAdd, handleSubscribe, setFeedToAdd }} />
+      <div>favs: {JSON.stringify(favlist)}</div>
       <RedditPostWrapper postData={postData} />
     </div>
   )
